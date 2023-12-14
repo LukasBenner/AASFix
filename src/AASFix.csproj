@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <StartupObject>AASFix.Program</StartupObject>
+    <PlatformTarget>x64</PlatformTarget>
+    <PublishAot>True</PublishAot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Packaging" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>
