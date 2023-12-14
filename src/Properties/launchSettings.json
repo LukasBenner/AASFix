@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "AASNSFix": {
+      "commandName": "Project",
+      "commandLineArgs": "simple_aas_only_id.PE.aasx simple_aas_only_id.fixed.aasx --fix",
+      "workingDirectory": "B:\\Projekte\\E+H\\Asset-Administration-Shell\\tools\\AASNSFix"
+    },
+    "unfix": {
+      "commandName": "Project",
+      "commandLineArgs": "simple_aas_only_id.fixed.aasx simple_aas_only_id.unfixed.aasx --unfix",
+      "workingDirectory": "B:\\Projekte\\E+H\\Asset-Administration-Shell\\tools\\AASNSFix"
+    }
+  }
+}
