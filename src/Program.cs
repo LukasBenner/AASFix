@@ -22,8 +22,14 @@ public class Program
     {
         if (args.Length != 3)
         {
-            PrintUsage();
-            return;
+            Console.WriteLine($"Too few arguments. Only {args.Length} arguments given.");
+            PrintUsage(); return;
+        }
+
+        if (!new[] { "--fix", "--unfix" }.Contains(args[2]))
+        {
+            Console.WriteLine($"Unknown operation: {args[2]}");
+            PrintUsage(); return;
         }
 
         if (File.Exists(args[1]))
