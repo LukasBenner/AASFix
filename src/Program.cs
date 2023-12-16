@@ -62,6 +62,8 @@ public class Program
         // Package does not have a SaveAs() method. It can be modified in place only.
         // So, let's work on the destination file immediately.
         File.Copy(inputFileName, outputFileName);
+        // If the source was readonly, then the copy is read-only as well. Make it writable, because we want to fix it.
+        new FileInfo(outputFileName).IsReadOnly = false;
         using var package = Package.Open(outputFileName, FileMode.Open, FileAccess.ReadWrite);
 
         new RelationshipFixer().Fix(package, _fixes);
