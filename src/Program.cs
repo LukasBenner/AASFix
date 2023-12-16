@@ -32,6 +32,12 @@ public class Program
             PrintUsage(); return;
         }
 
+        if (!File.Exists(args[0]))
+        {
+            Console.WriteLine("Input file not found. If you have spaces in your path, use quotation marks.");
+            return;
+        }
+
         if (File.Exists(args[1]))
         {
             Console.WriteLine("Output file already exists. This program will not overwrite existing files.");
