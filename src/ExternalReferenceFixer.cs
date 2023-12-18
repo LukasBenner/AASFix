@@ -50,6 +50,7 @@ internal class ExternalReferenceFixer
                 ApplyFix(fixableReferences);
 
                 stream.Seek(0, SeekOrigin.Begin);
+                stream.SetLength(0);
                 xml.Save(stream);
             }
         }
