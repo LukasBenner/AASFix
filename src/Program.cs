@@ -12,33 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.IO.Packaging;
 
 namespace AASFix;
 
 public class Program
 {
-    static void Main(string[] args)
+    static int Main(string[] args)
     {
         if (args.Length != 3)
         {
             Console.WriteLine($"Too few arguments. Only {args.Length} arguments given.");
-            PrintUsage(); return;
+            PrintUsage(); return (int)ReturnCode.WrongUsage;
         }
 
         if (!new[] { "--fix", "--unfix" }.Contains(args[2]))
         {
             Console.WriteLine($"Unknown operation: {args[2]}");
-            PrintUsage(); return;
+            PrintUsage(); return (int)ReturnCode.WrongUsage;
+        }
+
+        if (!File.Exists(args[0]))
+        {
+            Console.WriteLine("Input file not found. If you have spaces in your path, use quotation marks.");
+            return (int)ReturnCode.FileError;
         }
 
         if (File.Exists(args[1]))
         {
             Console.WriteLine("Output file already exists. This program will not overwrite existing files.");
-            return;
+            return (int)ReturnCode.FileError;
         }
 
         new Program().Run(args[0], args[1], args[2] == "--unfix");
+        return (int)ReturnCode.Success;
+    }
+
+    private enum ReturnCode
+    {
+        Success = 0,
+        WrongUsage = 1,
+        FileError = 2,
     }
 
     readonly List<Fix> _fixes = new()
@@ -112,5 +127,13 @@ public class Program
         Console.WriteLine("       --unfix           : reverse the operation, i.e. break the file according the standard.");
         Console.WriteLine("                           This will make the output file usable with unpatched versions of AASX package explorer.");
         Console.WriteLine("                           The output file may not work e.g. with the Python basyx library.");
+        Console.WriteLine();
+        Console.WriteLine("Exit Codes:");
+        var cc = new CamelCaseConverter();
+        foreach (var value in Enum.GetValues<ReturnCode>())
+        {
+            var humanReadable = cc.ToHumanReadable(value.ToString());
+            Console.WriteLine($"  {(int)value}  {humanReadable}");
+        }
     }
 }
