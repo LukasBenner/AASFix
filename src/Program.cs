@@ -84,6 +84,8 @@ public class Program
         new RelationshipFixer().Fix(package, _fixes);
         new RelationshipDefinitionFixer().Fix(package, _fixes);
         new ExternalReferenceFixer(package).Fix();
+        new VersionFixer(package).Fix();
+
 
         // DisplayContentsForDebuggingPurposes(package);
         package.Flush();
@@ -116,6 +118,9 @@ public class Program
         Console.WriteLine("You can convert a file back and forth in this regard.");
         Console.WriteLine();
         Console.WriteLine("Fixes the external reference issue (bug #681) in an AASX file.");
+        Console.WriteLine("This will only be done one-way, since Package Explorer can open fixed files.");
+        Console.WriteLine();
+        Console.WriteLine("Brings files from AASX version 1 to AASX version 3 by converting XML documents to the new namespace.");
         Console.WriteLine("This will only be done one-way, since Package Explorer can open fixed files.");
         Console.WriteLine();
         Console.WriteLine("Usage: AASFix <input file name> <output file name> [--fix|--unfix]");

@@ -61,6 +61,7 @@ namespace AASFix
         private void SaveXml(PackagePart part, XDocument xml)
         {
             using var stream = part.GetStream(FileMode.Open, FileAccess.Write);
+            stream.SetLength(0);
             xml.Save(stream);
         }
     }
