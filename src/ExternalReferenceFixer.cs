@@ -39,20 +39,19 @@ internal class ExternalReferenceFixer
     {
         foreach (var part in _parts)
         {
-            if (part.ContentType == "text/xml")
-            {
-                using var stream = part.GetStream(FileMode.Open, FileAccess.ReadWrite);
+            if (!ContentType.IsXml(part)) continue;
 
-                var xml = XDocument.Load(stream);
-                var submodelIDs = FindAllSubmodelIDs(xml);
-                var externalReferences = FindAllExternalReferences(xml);
-                var fixableReferences = FindLikelyLocalReferences(externalReferences, submodelIDs);
-                ApplyFix(fixableReferences);
+            using var stream = part.GetStream(FileMode.Open, FileAccess.ReadWrite);
 
-                stream.Seek(0, SeekOrigin.Begin);
-                stream.SetLength(0);
-                xml.Save(stream);
-            }
+            var xml = XDocument.Load(stream);
+            var submodelIDs = FindAllSubmodelIDs(xml);
+            var externalReferences = FindAllExternalReferences(xml);
+            var fixableReferences = FindLikelyLocalReferences(externalReferences, submodelIDs);
+            ApplyFix(fixableReferences);
+          
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.SetLength(0);
+            xml.Save(stream);
         }
     }
 
@@ -64,7 +63,7 @@ internal class ExternalReferenceFixer
         }
     }
 
-    private List<XElement> FindLikelyLocalReferences(List<XElement> externalReferences, List<string> submodelIDs)
+    private List<XElement> FindLikelyLocalReferences(IEnumerable<XElement> externalReferences, List<string> submodelIDs)
     {
         var result = new List<XElement>();
         foreach (var reference in externalReferences)
@@ -81,23 +80,13 @@ internal class ExternalReferenceFixer
         return result;
     }
 
-    private List<XElement> FindAllExternalReferences(XDocument xml)
+    private IEnumerable<XElement> FindAllExternalReferences(XDocument xml)
     {
-        var externalReferences = new List<XElement>();
         var references =
             xml.XPathSelectElements(
                 "/aas:environment/aas:assetAdministrationShells/aas:assetAdministrationShell/aas:submodels/aas:reference[aas:type/text()=\"ExternalReference\"]",
                 _nsMgr);
-        foreach (var reference in references)
-        {
-            var type = reference.XPathSelectElement("aas:type", _nsMgr);
-            if (type?.Value == "ExternalReference")
-            {
-                externalReferences.Add(reference);
-            }
-        }
-
-        return externalReferences;
+        return references;
     }
 
     private List<string> FindAllSubmodelIDs(XDocument xml)
