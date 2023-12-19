@@ -63,7 +63,7 @@ internal class ExternalReferenceFixer
         }
     }
 
-    private List<XElement> FindLikelyLocalReferences(List<XElement> externalReferences, List<string> submodelIDs)
+    private List<XElement> FindLikelyLocalReferences(IEnumerable<XElement> externalReferences, List<string> submodelIDs)
     {
         var result = new List<XElement>();
         foreach (var reference in externalReferences)
@@ -80,23 +80,13 @@ internal class ExternalReferenceFixer
         return result;
     }
 
-    private List<XElement> FindAllExternalReferences(XDocument xml)
+    private IEnumerable<XElement> FindAllExternalReferences(XDocument xml)
     {
-        var externalReferences = new List<XElement>();
         var references =
             xml.XPathSelectElements(
                 "/aas:environment/aas:assetAdministrationShells/aas:assetAdministrationShell/aas:submodels/aas:reference[aas:type/text()=\"ExternalReference\"]",
                 _nsMgr);
-        foreach (var reference in references)
-        {
-            var type = reference.XPathSelectElement("aas:type", _nsMgr);
-            if (type?.Value == "ExternalReference")
-            {
-                externalReferences.Add(reference);
-            }
-        }
-
-        return externalReferences;
+        return references;
     }
 
     private List<string> FindAllSubmodelIDs(XDocument xml)
