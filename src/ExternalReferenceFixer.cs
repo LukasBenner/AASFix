@@ -39,19 +39,18 @@ internal class ExternalReferenceFixer
     {
         foreach (var part in _parts)
         {
-            if (part.ContentType == "text/xml")
-            {
-                using var stream = part.GetStream(FileMode.Open, FileAccess.ReadWrite);
+            if (!ContentType.IsXml(part)) continue;
 
-                var xml = XDocument.Load(stream);
-                var submodelIDs = FindAllSubmodelIDs(xml);
-                var externalReferences = FindAllExternalReferences(xml);
-                var fixableReferences = FindLikelyLocalReferences(externalReferences, submodelIDs);
-                ApplyFix(fixableReferences);
+            using var stream = part.GetStream(FileMode.Open, FileAccess.ReadWrite);
 
-                stream.Seek(0, SeekOrigin.Begin);
-                xml.Save(stream);
-            }
+            var xml = XDocument.Load(stream);
+            var submodelIDs = FindAllSubmodelIDs(xml);
+            var externalReferences = FindAllExternalReferences(xml);
+            var fixableReferences = FindLikelyLocalReferences(externalReferences, submodelIDs);
+            ApplyFix(fixableReferences);
+
+            stream.Seek(0, SeekOrigin.Begin);
+            xml.Save(stream);
         }
     }
 
