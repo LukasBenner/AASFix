@@ -48,8 +48,9 @@ internal class ExternalReferenceFixer
             var externalReferences = FindAllExternalReferences(xml);
             var fixableReferences = FindLikelyLocalReferences(externalReferences, submodelIDs);
             ApplyFix(fixableReferences);
-
+          
             stream.Seek(0, SeekOrigin.Begin);
+            stream.SetLength(0);
             xml.Save(stream);
         }
     }
