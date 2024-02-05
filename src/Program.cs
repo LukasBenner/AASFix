@@ -84,6 +84,7 @@ public class Program
         new RelationshipFixer().Fix(package, _fixes);
         new RelationshipDefinitionFixer().Fix(package, _fixes);
         new ExternalReferenceFixer(package).Fix();
+        new EmptySemanticIdFixer(package).Fix();
 
         // DisplayContentsForDebuggingPurposes(package);
         package.Flush();
